@@ -1,0 +1,66 @@
+{
+  "name": "dundundun",
+	"displayName": "dundundun",
+	"description": "A plug-in to remind you to drink water",
+	"keywords": ["drink water", "喝水", "dun", "dundundun"],
+	"version": "1.0.0",
+	"engines": {
+		"vscode": "^1.55.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+        "*"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [{
+            "command": "extension.stopDun",
+            "title": "stopDun"
+
+		}],
+		"configuration": {
+			"type": "object",
+			"title": "🥛dundundun🥛",
+			"properties": {
+				"dundundun.open": {
+					"type": "boolean",
+					"default": "true",
+					"description": "是否开启dundundun"
+				},
+				"dundundun.name": {
+					"type": "string",
+					"default": "大佬",
+					"description": "名字"
+				},
+				"dundundun.duration": {
+					"type": "number",
+					"default": "30",
+					"description": "设置提醒间隔（分钟）"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "yarn run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+        "@types/vscode": "^1.55.0",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.0.4",
+        "@types/node": "^12.11.7",
+        "eslint": "^7.19.0",
+        "glob": "^7.1.6",
+        "mocha": "^8.2.1",
+        "typescript": "^4.1.3",
+        "vscode-test": "^1.5.0"
+    },
+	"repository": {
+        "type": "git",
+        "url": "https://github.com/guluMonster/dundundun"
+    }
+
+}
