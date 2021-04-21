@@ -8,7 +8,20 @@ const vscode = require('vscode');
 function activate(context) {
 
 	if (getSetting('open')) {
-		const msgList = ['每日三瓶水，健康打工人', '一天七杯水，医生远离我', '多喝水，尿不黄', '在吗？多喝热水', '多喝热水', '喝口水，休息一下吧', '为了腰子请勿憋尿', '喝口水动动脖子']
+		const msgList = [
+			'每日三瓶水，健康打工人',
+			'一天七杯水，医生远离我',
+			'多喝水，尿不黄',
+			'在吗？多喝热水',
+			'多喝热水',
+			'喝口水，休息一下吧',
+			'为了腰子请勿憋尿',
+			'喝口水动动脖子',
+			'肾好你也好，多喝水，少石头',
+			'等体检的时候 ,才知道多喝水有多么重要了',
+			'谁不会休息喝水，谁就不会工作',
+			'喝水，摸鱼'
+		]
 		const duration = getSetting('duration') * 60 * 1000;
 		const name = getSetting('name');
 		let index = 0
