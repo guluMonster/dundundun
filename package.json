@@ -3,7 +3,7 @@
 	"displayName": "dundundun",
 	"description": "A plug-in to remind you to drink water",
 	"keywords": ["drink water", "喝水", "dun", "dundundun"],
-	"version": "1.0.0",
+	"version": "1.0.4",
 	"engines": {
 		"vscode": "^1.55.0"
 	},
@@ -27,7 +27,7 @@
 			"properties": {
 				"dundundun.open": {
 					"type": "boolean",
-					"default": "true",
+					"default": true,
 					"description": "是否开启dundundun"
 				},
 				"dundundun.name": {
@@ -37,9 +37,18 @@
 				},
 				"dundundun.duration": {
 					"type": "number",
-					"default": "30",
-					"description": "设置提醒间隔（分钟）"
-				}
+					"default": 30,
+					"description": "设置提醒间隔"
+				},
+				"dundundun.unit": {
+					"type": "string",
+					"default": "min",
+					"enum": ["min", "sec"],
+					"enumDescriptions": [
+					  "分钟",
+					  "秒"
+					]
+			    }
 			}
 		}
 	},

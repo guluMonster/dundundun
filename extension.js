@@ -6,7 +6,12 @@ const vscode = require('vscode');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-
+	let unit = getSetting('unit') === 'min' ? 60 : 1;
+	let duration = getSetting('duration') * unit * 1000;
+	let name = getSetting('name');
+	let index = 0
+	let timer = null
+	let setTimer = null
 	if (getSetting('open')) {
 		const msgList = [
 			'每日三瓶水，健康打工人',
@@ -22,43 +27,65 @@ function activate(context) {
 			'谁不会休息喝水，谁就不会工作',
 			'喝水，摸鱼'
 		]
-		const duration = getSetting('duration') * 60 * 1000;
-		const name = getSetting('name');
-		let index = 0
-		let timer = setInterval(function () {
-			if (getSetting('open')) {
-				vscode.window.showInformationMessage(`${name}, ${msgList[index]}，( ゜ -゜)つロ 乾杯🍻`, '知道啦', '不再提示').then(result => {
-					if (result === '不再提示') {
+		setTimer = () => {
+			return setInterval(function () {
+				if (getSetting('open')) {
+					vscode.window.showInformationMessage(`${name ? name + ',' : name} ${msgList[index]}，( ゜ -゜)つロ 乾杯🍻`, '知道啦', '不再提示').then(result => {
+						if (result === '不再提示') {
+							index = 0
+							timer && clearInterval(timer)
+							handleStopDun()
+						}
+					});
+					index++
+					if (index > msgList.length - 1) {
 						index = 0
-						clearInterval(timer)
-						handleStopDun()
 					}
-				});
-				index++
-				if (index > msgList.length - 1) {
-					index = 0
+				} else {
+					timer && clearInterval(timer)
 				}
-			} else {
-				clearInterval(timer)
-			}
-			
-		}, duration)
+				
+			}, duration)
+		}
+		timer = setTimer()
 	}
 	
 	let disposable = vscode.commands.registerCommand('extension.stopDun', function () {
 		handleStopDun()
 	});
+
+	let listen = vscode.workspace.onDidChangeConfiguration((e) => {
+		const list = ["dundundun.name", "dundundun.unit", "dundundun.duration", "dundundun.open"]
+		const affected = list.some(item => e.affectsConfiguration(item));
+		console.log('e', e, affected);
+		if (affected) {
+			index = 0
+			timer && clearInterval(timer)
+			unit = getSetting('unit') === 'min' ? 60 : 1;
+			duration = getSetting('duration') * unit * 1000;
+			name = getSetting('name');
+		}
+		if (e.affectsConfiguration("dundundun.open") && !getSetting('open')) {
+			handleStopDun()
+		} else {
+			timer = setTimer()
+		}
+	});
+
+	let handleStopDun = () => {
+		if (timer) {
+			updateConfiguration('dundundun', 'open', false, true)
+			vscode.window.showInformationMessage(`dundundun已经关闭，如有需要可在全局配置中重新开启`, '( ゜ -゜)つロ 乾杯🍻')
+		}
+	}
 	
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable, listen);
 }
 
 function deactivate() { }
 
-function handleStopDun() {
-	updateConfiguration('dundundun', 'open', false, true)
-	vscode.window.showInformationMessage(`dundundun已经关闭，如有需要可在全局配置中重新开启`, '( ゜ -゜)つロ 乾杯🍻')
-}
+
 
 function getSetting(key) {
 	return vscode.workspace.getConfiguration().get(`dundundun.${key}`)
